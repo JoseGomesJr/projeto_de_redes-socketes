@@ -1,7 +1,5 @@
 #!/bin/python3
 import os
-from re import T
-import re
 import socket
 import time
 
@@ -62,6 +60,9 @@ def main():
                         msg = str(input("NOME: "))   
                         send_file(msg)
                 elif (msg == "END"):
+                        str1 = "END"
+                        bMsg_f = str1.encode("utf-8")
+                        client.send(bMsg_f)
                         client.close()
 
 if __name__ == "__main__":

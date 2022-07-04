@@ -1,5 +1,4 @@
 #!/bin/python2.7
-from re import T
 import socket
 import sys
 from threading import Thread
@@ -55,9 +54,9 @@ def recv_file(file, conn):
     s = file.read_arq()
     conn.sendall(s)
     return True
-def task():
+
+def task(conn, addr):
     while True:
-        conn, addr = serv.accept()
         from_client = ''
         welc_user = conn.recv(4096)
         print("Welcome " + str(welc_user))
@@ -72,14 +71,14 @@ def task():
                 print("Nenhum arquivo encontrado")
             else:
                 print("Arquivo enviado")
+        elif from_client == 'END':
+            break
 
     conn.close()
     print (str(welc_user) + " disconnected")
 
 if __name__ == "__main__":
-    thread1 = Thread(target=task)
-    thread2 = Thread(target=task)
-    thread1.start()
-    thread2.start()
-    input("Pressione entre")
-    sys.exit()
+    while True:
+        conn, addr = serv.accept()
+        thread1 = Thread(target=task, args=(conn,addr))
+        thread1.start()
