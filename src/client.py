@@ -9,6 +9,7 @@ MSG_SEP = "|"
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 8080))
 
+
 def send_file(filename):
     path = f"./to_upload/{filename}"
     try:
@@ -31,30 +32,36 @@ def send_file(filename):
             client.sendall(bytes)
         print("Arquivo enviado.")
 
+
 def recv(file_name):
     to_receive = 50
     msg = "SEND" + file_name
     client.send(msg.encode("utf-8"))
     filesize, filename = client.recv(4096).decode(FORMAT).split(MSG_SEP, 1)
     to_receive = int(filesize)
+    if to_receive == 0:
+        print("Nenhum arquivo recebido.")
+        return
     path = f"./downloads/{file_name}"
 
     with open(path, 'wb+') as file:
         print(f"Baixando {file_name}")
         while True:
             if to_receive > 0:
-                bytes_read = client.recv(min(to_receive, 4096))               
+                bytes_read = client.recv(min(to_receive, 4096))
                 file.write(bytes_read)
                 to_receive -= len(bytes_read)
             else:
                 break
         print("Download completo.")
 
+
 def create_dir():
     if not os.path.isdir("./downloads"):
         os.mkdir("./downloads")
     if not os.path.isdir("./to_upload"):
         os.mkdir("./to_upload")
+
 
 def main():
     print("Arquivos baixandos são enviados para o diretorio src/downloads")
@@ -65,7 +72,7 @@ def main():
             msg = str(input("NOME DO ARQUIVO: "))
             recv(msg)
         elif (msg == "SEND"):
-            msg = str(input("NOME DO ARQUIVO: "))   
+            msg = str(input("NOME DO ARQUIVO: "))
             send_file(msg)
         elif (msg == "LIST"):
             bMsg_f = "LIST".encode("utf-8")
@@ -76,6 +83,7 @@ def main():
             client.send(bMsg_f)
             client.close()
             break
+
 
 if __name__ == "__main__":
     create_dir()
