@@ -13,6 +13,8 @@
  
  ##### Arquivos baixados do servidor ficam salvos em ``src/downlods``
  
+ ##### Arquivos para serem enviados ao servidor devem ficar em ``src/to_download``
+ 
  ## SERVER
  
  ##### Aquivos enviados ao servidor ficam salvos em ``src/files``
